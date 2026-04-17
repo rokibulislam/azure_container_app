@@ -1,13 +1,13 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import ProtectedRoute from '../../../components/ProtectedRoute';
 import TaskForm from '../../../components/TaskForm';
 import AttachmentList from '../../../components/AttachmentList';
 import { api } from '../../../lib/api';
 
-export default function TaskViewPage() {
+function TaskViewContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const taskId = searchParams.get('id');
@@ -127,5 +127,13 @@ export default function TaskViewPage() {
         </>
       )}
     </ProtectedRoute>
+  );
+}
+
+export default function TaskViewPage() {
+  return (
+    <Suspense fallback={<p>Loading...</p>}>
+      <TaskViewContent />
+    </Suspense>
   );
 }
