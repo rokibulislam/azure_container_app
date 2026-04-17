@@ -1,0 +1,32 @@
+terraform apply -target=module.database -var-file="var.tfvars"
+terraform apply -target=module.database -var-file="var.tfvars"
+terraform destroy -target=module.database -var-file="var.tfvars"
+
+
+
+terraform plan -target=module.storage -var-file="var.tfvars"
+terraform apply -target=module.storage -var-file="var.tfvars"
+terraform destroy -target=module.storage -var-file="var.tfvars"
+
+
+terraform plan -target=module.container_app -var-file="var.tfvars"
+terraform apply -target=module.container_app -var-file="var.tfvars"
+terraform destroy -target=module.container_app -var-file="var.tfvars"
+
+resource_group_name = "rg-taskmgr-dev"
+sql_database_name = "sqldb-taskmgr-dev"
+sql_server_fqdn = "sqltaskmgrdevo1q8y5.database.windows.net"
+static_container_name = "static"
+static_website_url = "https://sttaskmgrdevo1q8y5.z7.web.core.windows.net/"
+storage_account_name = "sttaskmgrdevo1q8y5"
+uploads_container_name = "uploads-private"
+
+
+
+resource_group_name = "rg-taskmgr-dev"
+sql_database_name = "sqldb-taskmgr-dev"
+sql_server_fqdn = "sqltaskmgrdevo1q8y5.database.windows.net"
+static_container_name = "static"
+static_website_url = "https://sttaskmgrdevo1q8y5.z7.web.core.windows.net/"
+storage_account_name = "sttaskmgrdevo1q8y5"
+uploads_container_name = "uploads-private"
