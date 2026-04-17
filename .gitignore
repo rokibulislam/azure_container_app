@@ -12,9 +12,9 @@ build/
 .next/
 out/
 
-# Env
-.env
-.env.*
+# # Env
+# .env
+# .env.*
 
 # Logs
 logs/
