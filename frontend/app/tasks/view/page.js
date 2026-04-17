@@ -9,7 +9,6 @@ import { api } from '../../../lib/api';
 
 function TaskViewContent() {
   const router = useRouter();
-  
   const searchParams = useSearchParams();
   const taskId = searchParams.get('id');
 
