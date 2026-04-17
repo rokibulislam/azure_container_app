@@ -84,7 +84,7 @@ jobs:
       - name: Upload frontend to Blob
         run: |
           az storage blob upload-batch \
-            --account-name "${{ vars.STORAGE_ACCOUNT_NAME }}" \
+            --account-name "${{ secrets.STORAGE_ACCOUNT_NAME }}" \
             --account-key "${{ secrets.AZURE_STORAGE_KEY }}" \
             --destination '$web' \
             --source frontend/out \
