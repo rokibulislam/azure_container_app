@@ -2,7 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
-
+import { testDbConnection } from './db/pool.js';
 import { config } from './config.js';
 import { authRoutes } from './routes/auth.routes.js';
 import { taskRoutes } from './routes/task.routes.js';
@@ -23,8 +23,23 @@ app.get('/', (_req, res) => {
   res.json({ app: 'Task Manager API', status: 'running' });
 });
 
-app.get('/health', (_req, res) => {
-  res.json({ ok: true });
+app.get('/health', async (_req, res) => {
+  try {
+    await testDbConnection();
+
+    res.json({
+      ok: true,
+      db: 'connected',
+      sqlManagedIdentity: config.sql.useManagedIdentity,
+      storageManagedIdentity: config.storage.useManagedIdentity
+    });
+  } catch (error) {
+    res.status(500).json({
+      ok: false,
+      db: 'failed',
+      error: error.message
+    });
+  }
 });
 
 app.use('/api/auth', authRoutes);

@@ -1,58 +1,43 @@
 import {
   BlobServiceClient,
-  StorageSharedKeyCredential,
-  generateBlobSASQueryParameters,
-  BlobSASPermissions
+  BlobSASPermissions,
+  generateBlobSASQueryParameters
 } from '@azure/storage-blob';
-import { DefaultAzureCredential, ClientSecretCredential } from '@azure/identity';
-import { v4 as uuidv4 } from 'uuid';
+import { DefaultAzureCredential } from '@azure/identity';
+import { randomUUID } from 'crypto';
+import path from 'path';
 import { config } from '../config.js';
 
-function buildCredential() {
+function getBlobServiceClient() {
   if (config.storage.useManagedIdentity) {
-    return new DefaultAzureCredential();
-  }
-
-  if (config.storage.tenantId && config.storage.clientId && config.storage.clientSecret) {
-    return new ClientSecretCredential(
-      config.storage.tenantId,
-      config.storage.clientId,
-      config.storage.clientSecret
+    return new BlobServiceClient(
+      `https://${config.storage.accountName}.blob.core.windows.net`,
+      new DefaultAzureCredential()
     );
   }
 
-  return null;
-}
-
-function getBlobServiceClient() {
-  if (config.storage.connectionString) {
-    return BlobServiceClient.fromConnectionString(config.storage.connectionString);
-  }
-
-  const credential = buildCredential();
-  if (!credential) {
-    throw new Error('No Azure Blob credential configuration is available');
-  }
-
-  return new BlobServiceClient(
-    `https://${config.storage.accountName}.blob.core.windows.net`,
-    credential
+  return BlobServiceClient.fromConnectionString(
+    config.storage.connectionString
   );
 }
 
-function getSharedKeyCredential() {
-  const accountKey = process.env.STORAGE_ACCOUNT_KEY;
-  if (!accountKey) return null;
-  return new StorageSharedKeyCredential(config.storage.accountName, accountKey);
+const blobServiceClient = getBlobServiceClient();
+
+function getUploadsContainerClient() {
+  return blobServiceClient.getContainerClient(
+    config.storage.uploadsContainer
+  );
 }
 
-export async function uploadPrivateFile({ buffer, originalFilename, contentType }) {
-  const blobServiceClient = getBlobServiceClient();
-  const containerClient = blobServiceClient.getContainerClient(config.storage.uploadsContainer);
-  await containerClient.createIfNotExists();
+export async function uploadPrivateFile({
+  buffer,
+  originalFilename,
+  contentType
+}) {
+  const ext = path.extname(originalFilename || '');
+  const blobName = `${randomUUID()}${ext}`;
 
-  const safeName = originalFilename.replace(/[^a-zA-Z0-9._-]/g, '_');
-  const blobName = `${new Date().toISOString().slice(0, 10)}/${uuidv4()}-${safeName}`;
+  const containerClient = getUploadsContainerClient();
   const blockBlobClient = containerClient.getBlockBlobClient(blobName);
 
   await blockBlobClient.uploadData(buffer, {
@@ -65,48 +50,27 @@ export async function uploadPrivateFile({ buffer, originalFilename, contentType 
 }
 
 export async function generateReadUrl(blobName, expiresInMinutes = 15) {
-  const blobServiceClient = getBlobServiceClient();
-  const containerClient = blobServiceClient.getContainerClient(config.storage.uploadsContainer);
+  const containerClient = getUploadsContainerClient();
   const blobClient = containerClient.getBlobClient(blobName);
 
-  const sharedKey = getSharedKeyCredential();
-  if (sharedKey) {
-    const expiresOn = new Date(Date.now() + expiresInMinutes * 60 * 1000);
-    const sas = generateBlobSASQueryParameters(
-      {
-        containerName: config.storage.uploadsContainer,
-        blobName,
-        permissions: BlobSASPermissions.parse('r'),
-        startsOn: new Date(Date.now() - 60 * 1000),
-        expiresOn
-      },
-      sharedKey
-    ).toString();
-
-    return `${blobClient.url}?${sas}`;
-  }
-
-  const credential = buildCredential();
-  if (!credential) {
-    throw new Error('Cannot generate SAS without a valid Azure credential');
-  }
+  const expiresOn = new Date(Date.now() + expiresInMinutes * 60 * 1000);
 
   const delegationKey = await blobServiceClient.getUserDelegationKey(
-    new Date(Date.now() - 5 * 60 * 1000),
-    new Date(Date.now() + expiresInMinutes * 60 * 1000)
+    new Date(),
+    expiresOn
   );
 
-  const sas = generateBlobSASQueryParameters(
+  const sasToken = generateBlobSASQueryParameters(
     {
       containerName: config.storage.uploadsContainer,
       blobName,
       permissions: BlobSASPermissions.parse('r'),
-      startsOn: new Date(Date.now() - 60 * 1000),
-      expiresOn: new Date(Date.now() + expiresInMinutes * 60 * 1000)
+      startsOn: new Date(),
+      expiresOn
     },
     delegationKey,
     config.storage.accountName
   ).toString();
 
-  return `${blobClient.url}?${sas}`;
+  return `${blobClient.url}?${sasToken}`;
 }

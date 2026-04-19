@@ -3,11 +3,12 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-const config = {
+const useManagedIdentity =
+  String(process.env.SQL_USE_MANAGED_IDENTITY || 'false') === 'true';
+
+const baseConfig = {
   server: process.env.SQL_SERVER_FQDN,
   database: process.env.SQL_DATABASE_NAME,
-  user: process.env.SQL_USER,
-  password: process.env.SQL_PASSWORD,
   port: Number(process.env.SQL_PORT || 1433),
   options: {
     encrypt: true,
@@ -15,9 +16,28 @@ const config = {
   }
 };
 
+const config = useManagedIdentity
+  ? {
+      ...baseConfig,
+      authentication: {
+        type: 'azure-active-directory-default'
+      }
+    }
+  : {
+      ...baseConfig,
+      user: process.env.SQL_USER,
+      password: process.env.SQL_PASSWORD
+    };
+
 async function testConnection() {
   try {
     console.log('Connecting to Azure SQL...');
+    console.log(
+      `Auth mode: ${
+        useManagedIdentity ? 'Managed Identity' : 'SQL Username/Password'
+      }`
+    );
+
     const pool = await sql.connect(config);
 
     console.log('✅ Connected successfully');

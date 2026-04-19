@@ -40,7 +40,13 @@ export async function getPool() {
     poolPromise = new sql.ConnectionPool(buildSqlConfig())
       .connect()
       .then((pool) => {
-        console.log('Connected to Azure SQL');
+        console.log(
+          `Connected to Azure SQL using ${
+            config.sql.useManagedIdentity
+              ? 'Managed Identity'
+              : 'SQL credentials'
+          }`
+        );
         return pool;
       })
       .catch((err) => {
@@ -48,7 +54,14 @@ export async function getPool() {
         throw err;
       });
   }
+
   return poolPromise;
+}
+
+export async function testDbConnection() {
+  const pool = await getPool();
+  const result = await pool.request().query('SELECT 1 AS ok');
+  return result.recordset[0];
 }
 
 export { sql };
