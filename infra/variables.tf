@@ -39,18 +39,6 @@ variable "jwt_secret" {
   sensitive   = true
 }
 
-variable "cors_origin" {
-  description = "React app origin"
-  type        = string
-  default     = "https://sttaskmgrdevo1q8y5.z7.web.core.windows.net"
-}
-
-variable "container_image" {
-  description = "Backend container image"
-  type        = string
-  default     = "acrtaskmgrdev123.azurecr.io/task-manager-api:latest"
-}
-
 variable "container_cpu" {
   description = "CPU for container app"
   type        = number
@@ -102,58 +90,3 @@ variable "sql_aad_admin_tenant_id" {
   type        = string
 }
 
-# -----------------------------
-# Container App config
-# -----------------------------
-
-variable "acr_name" {
-  type = string
-}
-
-variable "acr_login_server" {
-  type = string
-}
-
-variable "acr_id" {
-  type = string
-}
-
-variable "container_env_name" {
-  type = string
-}
-
-variable "container_app_name" {
-  type = string
-}
-
-# -----------------------------
-# Database (existing)
-# -----------------------------
-
-variable "sql_server_fqdn" {
-  type = string
-}
-
-variable "sql_database_name" {
-  type = string
-}
-
-# -----------------------------
-# Storage (existing)
-# -----------------------------
-
-variable "storage_account_name" {
-  type = string
-}
-
-variable "storage_account_id" {
-  type = string
-}
-
-variable "static_container_name" {
-  type = string
-}
-
-variable "uploads_container_name" {
-  type = string
-}

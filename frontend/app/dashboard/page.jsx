@@ -36,8 +36,8 @@ export default function DashboardPage() {
 
   return (
     <ProtectedRoute>
-      <div className="row" style={{ justifyContent: 'space-between', alignItems: 'center' }}>
-        <h1>Dashboard</h1>
+      <div className="page-header">
+        <h1>Dashboard {tasks.length > 0 && <span style={{ fontSize: 16, fontWeight: 400, color: '#6b7280' }}>({tasks.length} task{tasks.length !== 1 ? 's' : ''})</span>}</h1>
         <button onClick={() => router.push('/tasks/new')}>New Task</button>
       </div>
       {error && <div className="error">{error}</div>}

@@ -22,6 +22,14 @@ module "resource_group" {
   location = var.location
 }
 
+resource "azurerm_container_registry" "this" {
+  name                = local.acr_name
+  resource_group_name = module.resource_group.name
+  location            = module.resource_group.location
+  sku                 = "Basic"
+  admin_enabled       = false
+}
+
 module "monitoring" {
   source              = "./modules/monitoring"
   name                = local.log_analytics_name
@@ -57,27 +65,27 @@ module "container_app" {
 
   resource_group_name        = module.resource_group.name
   location                   = module.resource_group.location
-  container_env_name         = var.container_env_name
+  container_env_name         = local.container_env_name
   log_analytics_workspace_id = module.monitoring.log_analytics_workspace_id
 
-  container_app_name         = var.container_app_name
-  container_image            = var.container_image
+  container_app_name         = local.container_app_name
+  container_image            = "mcr.microsoft.com/azuredocs/containerapps-helloworld:latest"
   container_cpu              = var.container_cpu
   container_memory           = var.container_memory
 
-  cors_origin                = var.cors_origin
+  cors_origin                = trimsuffix(module.storage.static_website_url, "/")
   jwt_secret                 = var.jwt_secret
 
-  sql_server_fqdn            = var.sql_server_fqdn
-  sql_database_name          = var.sql_database_name
+  sql_server_fqdn            = module.database.sql_server_fqdn
+  sql_database_name          = module.database.sql_database_name
   sql_admin_login            = var.sql_admin_login
   sql_admin_password         = var.sql_admin_password
 
-  storage_account_name       = var.storage_account_name
-  storage_account_id         = var.storage_account_id
-  static_container_name      = var.static_container_name
-  uploads_container_name     = var.uploads_container_name
+  storage_account_name       = module.storage.storage_account_name
+  storage_account_id         = module.storage.storage_account_id
+  static_container_name      = module.storage.static_container_name
+  uploads_container_name     = module.storage.uploads_container_name
 
-  acr_login_server           = var.acr_login_server
-  acr_id                     = var.acr_id
+  acr_login_server           = azurerm_container_registry.this.login_server
+  acr_id                     = azurerm_container_registry.this.id
 }

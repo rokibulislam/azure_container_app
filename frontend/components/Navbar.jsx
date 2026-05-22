@@ -3,15 +3,16 @@
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { isAuthenticated, removeToken } from '../lib/auth';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 
 export default function Navbar() {
   const [loggedIn, setLoggedIn] = useState(false);
   const router = useRouter();
+  const pathname = usePathname();
 
   useEffect(() => {
     setLoggedIn(isAuthenticated());
-  }, []);
+  }, [pathname]);
 
   function logout() {
     removeToken();
@@ -22,9 +23,7 @@ export default function Navbar() {
   return (
     <nav className="navbar">
       <div className="navbar-inner">
-        <Link href="/" style={{ color: 'white', textDecoration: 'none', fontWeight: 700 }}>
-          Task Manager
-        </Link>
+        <Link href="/" className="navbar-brand">Task Manager</Link>
         <div className="nav-links">
           {!loggedIn ? (
             <>
@@ -35,7 +34,7 @@ export default function Navbar() {
             <>
               <Link href="/dashboard">Dashboard</Link>
               <Link href="/tasks/new">New Task</Link>
-              <button onClick={logout}>Logout</button>
+              <button className="nav-logout" onClick={logout}>Logout</button>
             </>
           )}
         </div>

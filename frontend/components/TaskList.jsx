@@ -21,11 +21,18 @@ export default function TaskList({ tasks, onComplete, onDelete }) {
           >
             <div>
               <div className="task-title">{task.title}</div>
-              <p className="muted">{task.description || 'No description'}</p>
-              <div className={`badge ${task.status}`}>{task.status}</div>
-              <p className="muted">
-                Attachments: {task.attachment_count}
-              </p>
+              {task.description && <p className="muted">{task.description}</p>}
+              <div className="task-meta">
+                <span className={`badge ${task.status}`}>{task.status}</span>
+                {task.due_date && (
+                  <span className={`due-date${new Date(task.due_date) < new Date() && task.status !== 'completed' ? ' overdue' : ''}`}>
+                    Due {new Date(task.due_date).toLocaleDateString()}
+                  </span>
+                )}
+                {task.attachment_count > 0 && (
+                  <span className="muted">{task.attachment_count} attachment{task.attachment_count !== 1 ? 's' : ''}</span>
+                )}
+              </div>
             </div>
 
             <div className="row">

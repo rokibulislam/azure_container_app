@@ -34,7 +34,7 @@ resource "azurerm_container_app" "this" {
   }
 
   template {
-    min_replicas = 1
+    min_replicas = 0
     max_replicas = 1
 
     container {
@@ -134,6 +134,10 @@ resource "azurerm_container_app" "this" {
   depends_on = [
     azurerm_role_assignment.acr_pull_uai
   ]
+
+  lifecycle {
+    ignore_changes = [template[0].container]
+  }
 }
 
 resource "azurerm_role_assignment" "storage_blob_data_contributor" {

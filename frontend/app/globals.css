@@ -1,32 +1,5 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
-}
-
-
-
 * {
   box-sizing: border-box;
 }
@@ -34,110 +7,226 @@ body {
 html, body {
   margin: 0;
   padding: 0;
-  font-family: Arial, sans-serif;
+  font-family: var(--font-geist-sans), Arial, sans-serif;
   background: #f5f7fb;
   color: #1f2937;
 }
 
+/* ── Layout ── */
+
 .container {
   max-width: 960px;
   margin: 0 auto;
-  padding: 24px;
+  padding: 28px 24px;
 }
+
+/* ── Navbar ── */
 
 .navbar {
   background: #111827;
   color: white;
-  padding: 14px 24px;
+  padding: 0 24px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.25);
 }
 
 .navbar-inner {
   max-width: 960px;
+  width: 100%;
   margin: 0 auto;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
+.navbar-brand {
+  color: white;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 17px;
+  letter-spacing: -0.3px;
+}
+
 .nav-links {
   display: flex;
-  gap: 12px;
+  gap: 4px;
   align-items: center;
 }
 
-.nav-links a,
-.nav-links button {
-  color: white;
-  background: transparent;
-  border: none;
-  cursor: pointer;
+.nav-links a {
+  color: #d1d5db;
   text-decoration: none;
   font-size: 14px;
+  padding: 6px 10px;
+  border-radius: 6px;
+  transition: background 0.15s, color 0.15s;
 }
+
+.nav-links a:hover {
+  background: rgba(255,255,255,0.1);
+  color: white;
+}
+
+.nav-logout {
+  color: #d1d5db;
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.2);
+  cursor: pointer;
+  font-size: 14px;
+  padding: 6px 12px;
+  border-radius: 6px;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+  margin-left: 4px;
+}
+
+.nav-logout:hover {
+  background: rgba(255,255,255,0.12);
+  color: white;
+  border-color: rgba(255,255,255,0.4);
+}
+
+/* ── Cards ── */
 
 .card {
   background: white;
-  border-radius: 10px;
-  padding: 20px;
+  border-radius: 12px;
+  padding: 22px;
   margin-bottom: 16px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06), 0 2px 10px rgba(0,0,0,0.04);
+  border: 1px solid #e5e7eb;
 }
+
+.card h1, .card h2, .card h3 {
+  margin-top: 0;
+}
+
+/* ── Forms ── */
 
 .form-group {
   display: flex;
   flex-direction: column;
-  margin-bottom: 14px;
+  margin-bottom: 16px;
 }
 
 label {
   margin-bottom: 6px;
   font-weight: 600;
+  font-size: 14px;
+  color: #374151;
 }
 
 input,
 textarea,
 select {
-  padding: 10px;
+  padding: 10px 12px;
   border: 1px solid #d1d5db;
   border-radius: 8px;
   font-size: 14px;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  background: #fff;
+  color: #1f2937;
 }
 
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37,99,235,0.12);
+}
+
+/* ── Buttons ── */
+
 button {
-  padding: 10px 14px;
+  padding: 10px 16px;
   border: none;
   border-radius: 8px;
   background: #2563eb;
   color: white;
   cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background 0.15s, transform 0.1s;
+}
+
+button:hover {
+  background: #1d4ed8;
+}
+
+button:active {
+  transform: scale(0.98);
 }
 
 button.secondary {
-  background: #6b7280;
+  background: #f3f4f6;
+  color: #374151;
+  border: 1px solid #d1d5db;
+}
+
+button.secondary:hover {
+  background: #e5e7eb;
 }
 
 button.danger {
   background: #dc2626;
 }
 
+button.danger:hover {
+  background: #b91c1c;
+}
+
 button.success {
   background: #16a34a;
 }
+
+button.success:hover {
+  background: #15803d;
+}
+
+/* ── Misc ── */
 
 .row {
   display: flex;
   gap: 10px;
   flex-wrap: wrap;
+  align-items: center;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.page-header h1 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 700;
 }
 
 .task-title {
-  font-size: 18px;
+  font-size: 17px;
   font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.task-meta {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-top: 6px;
 }
 
 .badge {
   display: inline-block;
-  padding: 4px 8px;
+  padding: 3px 10px;
   border-radius: 999px;
   font-size: 12px;
   font-weight: 600;
@@ -153,17 +242,111 @@ button.success {
   color: #166534;
 }
 
+.due-date {
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.due-date.overdue {
+  color: #dc2626;
+  font-weight: 600;
+}
+
 .error {
   color: #b91c1c;
-  margin-bottom: 10px;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+  padding: 10px 14px;
+  margin-bottom: 14px;
+  font-size: 14px;
 }
 
 .muted {
   color: #6b7280;
   font-size: 14px;
+  margin: 0;
 }
 
 a.link {
   color: #2563eb;
   text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+a.link:hover {
+  text-decoration: underline;
+}
+
+.form-footer {
+  margin-top: 14px;
+  font-size: 14px;
+  color: #6b7280;
+  text-align: center;
+}
+
+.form-footer a {
+  color: #2563eb;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.form-footer a:hover {
+  text-decoration: underline;
+}
+
+.hero {
+  text-align: center;
+  padding: 48px 24px 32px;
+}
+
+.hero h1 {
+  font-size: 36px;
+  font-weight: 800;
+  margin-bottom: 12px;
+  color: #111827;
+}
+
+.hero p {
+  font-size: 17px;
+  color: #6b7280;
+  margin-bottom: 28px;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.btn-primary {
+  padding: 11px 24px;
+  background: #2563eb;
+  color: white;
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 15px;
+  transition: background 0.15s;
+}
+
+.btn-primary:hover {
+  background: #1d4ed8;
+}
+
+.btn-outline {
+  padding: 11px 24px;
+  background: white;
+  color: #374151;
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 15px;
+  border: 1px solid #d1d5db;
+  transition: background 0.15s;
+}
+
+.btn-outline:hover {
+  background: #f3f4f6;
 }

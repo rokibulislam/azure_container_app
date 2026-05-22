@@ -2,14 +2,12 @@ import Link from 'next/link';
 
 export default function Home() {
   return (
-    <div className="card">
+    <div className="hero">
       <h1>Task Manager</h1>
-      <p className="muted">
-        Manage tasks, upload attachments, and deploy the app to Azure using PaaS services.
-      </p>
-      <div className="row">
-        <Link href="/login" className="link">Login</Link>
-        <Link href="/register" className="link">Register</Link>
+      <p>Organise your work, track progress, and manage file attachments — all in one place.</p>
+      <div className="hero-actions">
+        <Link href="/register" className="btn-primary">Get started</Link>
+        <Link href="/login" className="btn-outline">Log in</Link>
       </div>
     </div>
   );

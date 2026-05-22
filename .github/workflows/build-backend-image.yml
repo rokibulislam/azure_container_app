@@ -55,7 +55,7 @@ jobs:
           subscription-id: ee73c68c-a575-4af1-9836-f306ab0751d6
 
       - name: Login to ACR
-        run: az acr login --name ${{ secrets.ACR_LOGIN_SERVER }}
+        run: az acr login --name ${{ secrets.ACR_NAME }}
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -87,6 +87,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v5
 
+      - name: Login to Azure (OIDC)
+        uses: azure/login@v2
+        with:
+          client-id: 69ecd82d-9fbe-4f15-b35d-142eb15d71ca
+          tenant-id: 11904f23-f0db-4cdc-96f7-390bd55fcee8
+          subscription-id: ee73c68c-a575-4af1-9836-f306ab0751d6
+
       - name: Set up Node
         uses: actions/setup-node@v4
         with:
@@ -106,7 +113,7 @@ jobs:
         run: |
           az storage blob upload-batch \
             --account-name "${{ secrets.STORAGE_ACCOUNT_NAME }}" \
-            --account-key "${{ secrets.AZURE_STORAGE_KEY }}" \
+            --auth-mode login \
             --destination '$web' \
             --source frontend/out \
             --overwrite

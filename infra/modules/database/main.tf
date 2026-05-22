@@ -28,7 +28,7 @@ resource "azurerm_mssql_database" "this" {
   sku_name                     = "GP_S_Gen5_1"
   max_size_gb                  = var.sql_db_max_size_gb
   min_capacity                 = var.sql_db_min_capacity
-  auto_pause_delay_in_minutes  = -1
+  auto_pause_delay_in_minutes  = var.sql_db_auto_pause_delay_minutes
 
   lifecycle {
     prevent_destroy = false
@@ -39,6 +39,6 @@ resource "azurerm_mssql_database" "this" {
 resource "azurerm_mssql_firewall_rule" "my_ip" {
   name             = "AllowMyIP"
   server_id        = azurerm_mssql_server.this.id
-  start_ip_address = "89.24.50.253"
-  end_ip_address   = "89.24.50.253"
+  start_ip_address = "78.80.18.74"
+  end_ip_address   = "78.80.18.74"
 }

@@ -17,9 +17,6 @@ async function request(path, options = {}) {
     headers['Authorization'] = `Bearer ${token}`;
   }
 
-  console.log('API_BASE_URL:', API_BASE_URL);
-  console.log('Request URL:', `${API_BASE_URL}${path}`);
-
   const response = await fetch(`${API_BASE_URL}${path}`, {
     ...options,
     headers

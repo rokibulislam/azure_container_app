@@ -89,7 +89,7 @@ function TaskViewContent() {
         <h1>Edit Task</h1>
         <button
           className="secondary"
-          onClick={() => router.push('/dashboard.html')}
+          onClick={() => router.push('/dashboard')}
         >
           Back
         </button>
