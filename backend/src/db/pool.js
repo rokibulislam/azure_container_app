@@ -8,6 +8,8 @@ function buildSqlConfig() {
     server: config.sql.server,
     database: config.sql.database,
     port: config.sql.port,
+    connectionTimeout: 90000,
+    requestTimeout: 30000,
     options: {
       encrypt: true,
       trustServerCertificate: false

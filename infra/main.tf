@@ -47,6 +47,9 @@ module "database" {
   sql_db_max_size_gb              = var.sql_db_max_size_gb
   sql_db_min_capacity             = var.sql_db_min_capacity
   sql_db_auto_pause_delay_minutes = var.sql_db_auto_pause_delay_minutes
+  sql_aad_admin_login             = var.sql_aad_admin_login
+  sql_aad_admin_object_id         = var.sql_aad_admin_object_id
+  sql_aad_admin_tenant_id         = var.sql_aad_admin_tenant_id
 }
 
 module "container_app" {

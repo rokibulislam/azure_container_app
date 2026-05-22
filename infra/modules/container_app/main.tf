@@ -34,7 +34,7 @@ resource "azurerm_container_app" "this" {
   }
 
   template {
-    min_replicas = 0
+    min_replicas = 1
     max_replicas = 1
 
     container {
@@ -85,18 +85,18 @@ resource "azurerm_container_app" "this" {
 
       env {
         name  = "SQL_USE_MANAGED_IDENTITY"
-        value = "false"
+        value = "true"
       }
 
-      env {
-        name  = "SQL_USER"
-        value = var.sql_admin_login
-      }
+      # env {
+      #   name  = "SQL_USER"
+      #   value = var.sql_admin_login
+      # }
 
-      env {
-        name  = "SQL_PASSWORD"
-        value = var.sql_admin_password
-      }
+      # env {
+      #   name  = "SQL_PASSWORD"
+      #   value = var.sql_admin_password
+      # }
 
       env {
         name  = "STORAGE_ACCOUNT_NAME"

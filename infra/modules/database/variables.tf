@@ -34,3 +34,15 @@ variable "sql_db_max_size_gb" {
 variable "sql_db_auto_pause_delay_minutes" {
   type = number
 }
+
+variable "sql_aad_admin_login" {
+  type = string
+}
+
+variable "sql_aad_admin_object_id" {
+  type = string
+}
+
+variable "sql_aad_admin_tenant_id" {
+  type = string
+}

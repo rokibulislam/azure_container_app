@@ -7,6 +7,12 @@ resource "azurerm_mssql_server" "this" {
   administrator_login_password  = var.sql_admin_password
   minimum_tls_version           = "1.2"
   public_network_access_enabled = true
+
+  azuread_administrator {
+    login_username = var.sql_aad_admin_login
+    object_id      = var.sql_aad_admin_object_id
+    tenant_id      = var.sql_aad_admin_tenant_id
+  }
 }
 
 resource "azurerm_mssql_firewall_rule" "allow_azure_services" {
@@ -22,7 +28,7 @@ resource "azurerm_mssql_database" "this" {
   sku_name                     = "GP_S_Gen5_1"
   max_size_gb                  = var.sql_db_max_size_gb
   min_capacity                 = var.sql_db_min_capacity
-  auto_pause_delay_in_minutes  = var.sql_db_auto_pause_delay_minutes
+  auto_pause_delay_in_minutes  = -1
 
   lifecycle {
     prevent_destroy = false

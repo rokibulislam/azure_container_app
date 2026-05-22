@@ -87,6 +87,21 @@ variable "github_object_id" {
   default     = ""
 }
 
+variable "sql_aad_admin_login" {
+  description = "Azure AD admin login for SQL server"
+  type        = string
+}
+
+variable "sql_aad_admin_object_id" {
+  description = "Azure AD admin object ID for SQL server"
+  type        = string
+}
+
+variable "sql_aad_admin_tenant_id" {
+  description = "Azure AD tenant ID for SQL server"
+  type        = string
+}
+
 # -----------------------------
 # Container App config
 # -----------------------------
